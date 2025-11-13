@@ -3,8 +3,6 @@ name: helijao app
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 permissions:
   id-token: write
@@ -23,7 +21,7 @@ jobs:
 
       - name: List Files
         run: |
-          echo "Terry is teaching"
+          echo "Helijao is deploying this on Azure"
 
       - name: Install Dependencies
         run: |
