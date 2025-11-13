@@ -19,8 +19,8 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: List Files
-        run: |
+      - name: Message
+        run:
           echo "Helijao is deploying this on Azure"
 
       - name: List Files
