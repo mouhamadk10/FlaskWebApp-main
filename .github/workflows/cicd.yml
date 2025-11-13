@@ -30,7 +30,7 @@ jobs:
       - name : Linux Invalid Command
         run: |
           echo "Im going to use [ech 'Blah Blah Blah'] as the command below.
-          ech 'Blah Blah Blah'
+          echo 'Blah Blah Blah'
 
 #      - name: Install Dependencies
 #        run: |
