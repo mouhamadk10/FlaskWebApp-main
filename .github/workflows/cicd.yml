@@ -68,14 +68,14 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/devops:${{ github.sha }} .
           docker push ${{ secrets.DOCKER_USERNAME }}/devops:${{ github.sha }}
-#
-#      - name: Deploy to Azure Web App
-#        uses: azure/webapps-deploy@v2
-#        with:
-#          app-name: 'dv-cute-perch'
-#          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-#          images: '${{ secrets.DOCKER_USERNAME }}/devops:${{ github.sha }}'
-#
-#
-#
-#
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'helijaoapp'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          images: '${{ secrets.DOCKER_USERNAME }}/devops:${{ github.sha }}'
+
+
+
+
