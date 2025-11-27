@@ -21,7 +21,10 @@ jobs:
 
       - name: Message
         run:
-          echo "Helijao is deploying this on Azure"
+          echo "Helijao is deploying this on GitHub"
+          echo ${{ secrets.DOCKER_USERNAME}}
+          echo ${{ secrets.DOCKER_PASSWORD}}
+          echo ${{ vars.TEST}}
 
       - name: List Files
         run: |
@@ -47,9 +50,7 @@ jobs:
 
       - name: Test Variables and Secrets
         run: |
-          echo ${{ secrets.DOCKER_USERNAME}}
-          echo ${{ secrets.DOCKER_PASSWORD}}
-          echo ${{ vars.TEST}}
+          
 
 #  deploy:
 #    runs-on: ubuntu-latest
