@@ -2,32 +2,157 @@
 
 {% block content %}
 
-<div class="jumbotron">
-    <h1>Flask</h1>
-    <p class="lead">Flask is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://flask.pocoo.org/" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-</div>
+<canvas id="fireworks-canvas"></canvas>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            Flask gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://flask.pocoo.org/docs/">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>The Python Package Index is a repository of software for the Python programming language.</p>
-        <p><a class="btn btn-default" href="https://pypi.python.org/pypi">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Microsoft Azure</h2>
-        <p>You can easily publish to Microsoft Azure using Visual Studio. Find out how you can host your application using a free trial today.</p>
-        <p><a class="btn btn-default" href="http://azure.microsoft.com">Learn more &raquo;</a></p>
+<div class="hero">
+    <h1>Helijao's DevOps Project</h1>
+    <p class="hero-subtitle">Experience the future of web deployment with modern aesthetics and robust DevOps practices.
+    </p>
+    <div>
+        <a href="https://flask.palletsprojects.com/" class="btn btn-primary">Learn Flask</a>
+        <a href="https://azure.microsoft.com/" class="btn btn-secondary">Deploy to Azure</a>
     </div>
 </div>
 
+<div class="features-grid">
+    <div class="feature-card">
+        <h2>Modern Stack</h2>
+        <p>Built with Flask and Python, leveraging the power of modern web standards for a seamless experience.</p>
+    </div>
+    <div class="feature-card">
+        <h2>DevOps Integration</h2>
+        <p>Fully automated CI/CD pipelines ensuring rapid and reliable deployment to the cloud.</p>
+    </div>
+    <div class="feature-card">
+        <h2>Premium Design</h2>
+        <p>A completely redesigned UI with glassmorphism, neon accents, and smooth animations.</p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const canvas = document.getElementById('fireworks-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    let fireworks = [];
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Firework {
+        constructor() {
+            this.x = Math.random() * width;
+            this.y = height;
+            this.targetY = Math.random() * (height * 0.5);
+            this.speed = 5 + Math.random() * 5;
+            this.angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.2;
+            this.vx = Math.cos(this.angle) * this.speed;
+            this.vy = Math.sin(this.angle) * this.speed;
+            this.hue = Math.random() * 360;
+            this.brightness = 50 + Math.random() * 20;
+            this.alpha = 1;
+            this.dead = false;
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.vy += 0.05; // gravity
+            this.alpha -= 0.005;
+
+            if (this.y <= this.targetY || this.vy >= 0) {
+                this.dead = true;
+                this.explode();
+            }
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(${this.hue}, 100%, ${this.brightness}%, ${this.alpha})`;
+            ctx.fill();
+        }
+
+        explode() {
+            const particleCount = 50 + Math.random() * 50;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle(this.x, this.y, this.hue));
+            }
+        }
+    }
+
+    class Particle {
+        constructor(x, y, hue) {
+            this.x = x;
+            this.y = y;
+            this.hue = hue;
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 5 + 1;
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+            this.friction = 0.95;
+            this.gravity = 0.1;
+            this.alpha = 1;
+            this.decay = Math.random() * 0.015 + 0.01;
+            this.dead = false;
+        }
+
+        update() {
+            this.vx *= this.friction;
+            this.vy *= this.friction;
+            this.vy += this.gravity;
+            this.x += this.vx;
+            this.y += this.vy;
+            this.alpha -= this.decay;
+
+            if (this.alpha <= 0) {
+                this.dead = true;
+            }
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(${this.hue}, 100%, 60%, ${this.alpha})`;
+            ctx.fill();
+        }
+    }
+
+    function loop() {
+        requestAnimationFrame(loop);
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.fillRect(0, 0, width, height);
+        ctx.globalCompositeOperation = 'lighter';
+
+        if (Math.random() < 0.05) {
+            fireworks.push(new Firework());
+        }
+
+        for (let i = fireworks.length - 1; i >= 0; i--) {
+            fireworks[i].update();
+            fireworks[i].draw();
+            if (fireworks[i].dead) {
+                fireworks.splice(i, 1);
+            }
+        }
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+            particles[i].update();
+            particles[i].draw();
+            if (particles[i].dead) {
+                particles.splice(i, 1);
+            }
+        }
+    }
+
+    loop();
+</script>
 {% endblock %}
