@@ -59,3 +59,7 @@ def cache_test():
         return f"Redis Connected - Visit Count: {count}"
     except Exception as e:
         return f"Redis {str(e)}"
+    
+@app.route('/my-name')
+def my_name():
+    return "Hello from mohamad kaddour!"
